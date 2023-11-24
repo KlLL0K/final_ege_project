@@ -1,9 +1,13 @@
+# по всем вопросом можно написать мне в телеграме
 import time
 import datetime
 import sys
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QDialog, QWidget, QLabel, QMainWindow
 import sqlite3
+from Logs import Logs
+
+zadanie = 0
 
 # создание бд
 # --------------------------------------
@@ -122,8 +126,8 @@ def result_k1d3_any():
 
 def sol_k2d3(x, y, p, k_max, d1, d2, d3):
     d4 = f"y{d1[1:]}"
-    d5 = f"y{d1[1:]}"
-    d6 = f"y{d1[1:]}"
+    d5 = f"y{d2[1:]}"
+    d6 = f"y{d3[1:]}"
     if x + y >= k_max and p == 3:
         return 1
     if x + y < k_max and p == 3:
@@ -164,8 +168,8 @@ def result_k2d3():
 
 def sol_k2d3_any(x, y, p, k_max, d1, d2, d3):
     d4 = f"y{d1[1:]}"
-    d5 = f"y{d1[1:]}"
-    d6 = f"y{d1[1:]}"
+    d5 = f"y{d2[1:]}"
+    d6 = f"y{d3[1:]}"
     if x + y >= k_max and p == 3:
         return 1
     if x + y < k_max and p == 3:
@@ -220,6 +224,116 @@ def result_k2d3_any():
             return i
 
 
+def n20_1k(x, p, k_max, d1, d2, d3):
+    if x >= k_max and p == 4:
+        return 1
+    if x < k_max and p == 4:
+        return 0
+    if x >= k_max and p < 4:
+        return 0
+    else:
+        if d3:
+            if p % 2 != 0:
+                return (n20_1k(eval(d1), p + 1, k_max, d1, d2, d3) or n20_1k(eval(d2), p + 1, k_max, d1, d2, d3) or
+                        n20_1k(
+                            eval(d3), p + 1,
+                            k_max,
+                            d1, d2, d3))
+            else:
+                return (n20_1k(eval(d1), p + 1, k_max, d1, d2, d3) and n20_1k(eval(d2), p + 1, k_max, d1, d2, d3)
+                        and n20_1k(
+                            eval(d3), p + 1,
+                            k_max,
+                            d1, d2, d3))
+        else:
+            if p % 2 != 0:
+                return n20_1k(eval(d1), p + 1, k_max, d1, d2, d3) or n20_1k(eval(d2), p + 1, k_max, d1, d2, d3)
+            else:
+                return n20_1k(eval(d1), p + 1, k_max, d1, d2, d3) and n20_1k(eval(d2), p + 1, k_max, d1, d2, d3)
+
+
+@timer_decorator
+def result_n20_1k():
+    k_start, k_max, d1, d2, d3 = 0, 0, 0, 0, 0
+    conn3 = sqlite3.connect("my_database.db")
+    cursor3 = conn3.cursor()
+    cursor3.execute("SELECT * FROM my_table")
+    row = cursor3.fetchall()[-1]
+    if row is not None:
+        k_start, k_max, d1, d2, d3 = row
+    conn3.close()
+    ans = []
+    for i in range(100):
+        if n20_1k(x=i, p=1, k_max=k_max, d1=d1, d2=d2, d3=d3):
+            ans.append(i)
+            print(i)
+    return str(ans)
+
+
+def n20_2k(x, y, p, k_max, d1, d2, d3):
+    d4 = f"y{d1[1:]}"
+    d5 = f"y{d2[1:]}"
+    d6 = f"y{d3[1:]}"
+    if x + y >= k_max and p == 4:
+        return 1
+    elif x + y < k_max and p == 4:
+        return 0
+    elif x + y >= k_max and p < 4:
+        return 0
+    else:
+        if d3:
+            if p % 2 != 0:
+                return (n20_2k(eval(d1), y, p + 1, k_max, d1, d2, d3)
+                        or n20_2k(eval(d2), y, p + 1, k_max, d1, d2, d3)
+                        or n20_2k(eval(d3), y, p + 1, k_max, d1, d2, d3)
+                        or n20_2k(x, eval(d4), p + 1, k_max, d1, d2, d3)
+                        or n20_2k(x, eval(d5), p + 1, k_max, d1, d2, d3)
+                        or n20_2k(x, eval(d6), p + 1, k_max, d1, d2, d3)
+                        )
+            else:
+                return (n20_2k(eval(d1), y, p + 1, k_max, d1, d2, d3)
+                        and n20_2k(eval(d2), y, p + 1, k_max, d1, d2, d3)
+                        and n20_2k(eval(d3), y, p + 1, k_max, d1, d2, d3)
+                        and n20_2k(x, eval(d4), p + 1, k_max, d1, d2, d3)
+                        and n20_2k(x, eval(d5), p + 1, k_max, d1, d2, d3)
+                        and n20_2k(x, eval(d6), p + 1, k_max, d1, d2, d3)
+                        )
+
+        else:
+            if p % 2 != 0:
+                return (n20_2k(eval(d1), y, p + 1, k_max, d1, d2, d3)
+                        or n20_2k(eval(d2), y, p + 1, k_max, d1, d2, d3)
+                        or n20_2k(x, eval(d4), p + 1, k_max, d1, d2, d3)
+                        or n20_2k(x, eval(d5), p + 1, k_max, d1, d2, d3)
+                        )
+            else:
+                return (n20_2k(eval(d1), y, p + 1, k_max, d1, d2, d3)
+                        and n20_2k(eval(d2), y, p + 1, k_max, d1, d2, d3)
+                        and n20_2k(x, eval(d4), p + 1, k_max, d1, d2, d3)
+                        and n20_2k(x, eval(d5), p + 1, k_max, d1, d2, d3)
+                        )
+
+
+@timer_decorator
+def result_n20_2k():
+    k_start, k_max, d1, d2, d3 = 0, 0, 0, 0, 0
+    conn3 = sqlite3.connect("my_database.db")
+    cursor3 = conn3.cursor()
+    cursor3.execute("SELECT * FROM my_table")
+    row = cursor3.fetchall()[-1]
+    if row is not None:
+        k_start, k_max, d1, d2, d3 = row
+    conn3.close()
+    ans = []
+    for i in range(100):
+        if n20_2k(x=i, y=k_start, p=1, k_max=k_max, d1=d1, d2=d2, d3=d3):
+            ans.append(i)
+            print('---------------------')
+            print(i)
+            print(ans)
+    return str(ans)
+
+
 def banch2(selected):
     global bunch
     if selected:
@@ -246,7 +360,7 @@ def var_lost(selected):
 
 # --------------------------------------
 # Графический интерфейс
-class MyWidget(QDialog):
+class Zad19(QDialog):
     def __init__(self):
         self.third_form = None
         self.second_form = None
@@ -286,6 +400,42 @@ class MyWidget(QDialog):
         self.third_form.show()
 
 
+class Zad20(QDialog):
+    def __init__(self):
+        self.third_form = None
+        self.second_form = None
+        global bunch
+        super().__init__()
+        uic.loadUi('zad_20.ui', self)
+        self.pushButton.clicked.connect(self.res)
+        self.radioButton_2.toggled.connect(banch1)
+        self.radioButton_3.toggled.connect(banch2)
+        self.pushButton_2.clicked.connect(self.log)
+        bunch = 0
+
+    def res(self):
+        global bunch
+        d1 = self.lineEdit.text()
+        d2 = self.lineEdit_2.text()
+        d3 = self.lineEdit_3.text()
+        k_start = self.nach.text()
+        k_max = self.kon.text()
+        conn1 = sqlite3.connect("my_database.db")
+        cursor1 = conn1.cursor()
+        cursor1.execute("REPLACE INTO my_table (k_start, k_max, d1, d2, d3) VALUES (?, ?, ?, ?, ?)",
+                        (k_start, k_max, d1, d2, d3))
+        conn1.commit()
+        result = cursor1.execute("""select * from my_table""").fetchall()
+        print(result)
+
+        self.second_form = Results()
+        self.second_form.show()
+
+    def log(self):
+        self.third_form = Logs()
+        self.third_form.show()
+
+
 class Results(QWidget):
     def __init__(self):
         super().__init__()
@@ -296,52 +446,33 @@ class Results(QWidget):
     def initUI(self):
         global bunch
         global vin_var
+        global zadanie
         self.setGeometry(300, 300, 200, 150)
         self.setWindowTitle('ответ')
         self.result_l = QLabel(self)
         self.result_time = QLabel(self)
-        if bunch == 0 and vin_var == 0:
-            self.result_l.setText(f'ответ: {result_k1d3()}')
-            self.result_l.move(50, 50)
-        elif bunch == 1 and vin_var == 0:
-            self.result_l.setText(f'ответ: {result_k2d3()}')
-            self.result_l.move(50, 50)
-        elif bunch == 0 and vin_var == 1:
-            self.result_l.setText(f'ответ: {result_k1d3_any()}')
-            self.result_l.move(50, 50)
-        elif bunch == 1 and vin_var == 1:
-            self.result_l.setText(f'ответ: {result_k2d3_any()}')
-            self.result_l.move(50, 50)
-
-
-class Logs(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.constant = None
-        self.result_time = None
-        self.result_l = None
-        self.initUI()
-
-    def initUI(self):
-        self.setGeometry(300, 300, 500, 150)
-        self.setWindowTitle('история')
-        self.result_l = QLabel(self)
-        self.result_time = QLabel(self)
-        self.constant = QLabel(self)
-        conn1 = sqlite3.connect("my_database.db")
-        cursor1 = conn1.cursor()
-        result = cursor1.execute("""select * from result_table""").fetchall()[-1]
-        conn1.close()
-        conn1 = sqlite3.connect("my_database.db")
-        cursor1 = conn1.cursor()
-        const = cursor1.execute("""select * from my_table""").fetchall()[-1]
-        conn1.close()
-        self.constant.setText(f"Входные данные:{const}")
-        self.constant.move(10, 10)
-        self.result_l.setText(f'дата и время решения: {result[0]}')
-        self.result_l.move(10, 50)
-        self.result_time.setText(f'время выполнения кода: {str(result[1])[:8:]}')
-        self.result_time.move(10, 90)
+        if zadanie == 19:
+            if bunch == 0 and vin_var == 0:
+                self.result_l.setText(f'ответ: {result_k1d3()}')
+                self.result_l.move(50, 50)
+            elif bunch == 1 and vin_var == 0:
+                self.result_l.setText(f'ответ: {result_k2d3()}')
+                self.result_l.move(50, 50)
+            elif bunch == 0 and vin_var == 1:
+                self.result_l.setText(f'ответ: {result_k1d3_any()}')
+                self.result_l.move(50, 50)
+            elif bunch == 1 and vin_var == 1:
+                self.result_l.setText(f'ответ: {result_k2d3_any()}')
+                self.result_l.move(50, 50)
+        if zadanie == 20:
+            if bunch == 0:
+                print(0)
+                self.result_l.setText(f'ответ: {result_n20_1k()}')
+                self.result_l.move(50, 50)
+            if bunch == 1:
+                print(1)
+                self.result_l.setText(f'ответ: {result_n20_2k()}')
+                self.result_l.move(50, 50)
 
 
 class MainWindow(QMainWindow):
@@ -352,10 +483,18 @@ class MainWindow(QMainWindow):
         self.pushButton.clicked.connect(self.run_task)
 
     def run_task(self):
+        global zadanie
         if self.comboBox.currentText() == '19 задание егэ. Выигрышная стратегия. Задание 1':
-            self.second_form = MyWidget()
+            self.second_form = Zad19()
             self.second_form.show()
             self.hide()
+            zadanie = 19
+
+        if self.comboBox.currentText() == '20 задание егэ. Выигрышная стратегия. Задание 2':
+            self.second_form = Zad20()
+            self.second_form.show()
+            self.hide()
+            zadanie = 20
 
 
 def except_hook(cls, exception, traceback):

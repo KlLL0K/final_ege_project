@@ -1,5 +1,6 @@
 ('C:\\Users\\User\\PycharmProjects\\GITTRY\\build\\ege\\PYZ-00.pyz',
- [('PyQt5',
+ [('Logs', 'C:\\Users\\User\\PycharmProjects\\GITTRY\\Logs.py', 'PYMODULE'),
+  ('PyQt5',
    'C:\\Users\\User\\PycharmProjects\\GITTRY\\z\\Lib\\site-packages\\PyQt5\\__init__.py',
    'PYMODULE'),
   ('PyQt5.uic',
